@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--可以将datasource中的配置不写死，将数据库配置和mybatis配置分离开==就要用properties来进行-->
+<configuration>
+    <!--
+    properties中有两个属性
+    1、resource是当配置文件在类路径下时候就用
+    2、url是当配置文件为网络地址或者其他文件下时候用
+    -->
+    <properties resource="datasource.properties"></properties>
+    <!--
+    还有一个属性就是给在mapper中的全包名起一个别名，但是推荐还是写全包名（！！！！特别注意别名不区分大小写）
+    起别名有两种
+    1、就是一个一个起
+    <typeAliases>
+        <typeAlias type="" alias=""></typeAlias>
+    </typeAliases>
+    type:就是用简写的全包名，alias不写的话默认为类名的小写（alias可以指定别名）
+    2、批量起别名
+    <typeAliases>
+        <package name=""/>
+    </typeAliases>
+    name就是要给那个包起别名的全包名，默认也是每个类的类名小写，也可以在package下用
+    @Alias("emp")进行指定别名
+    别名不区分大小写
+    而且mybatis将java中已有的类型都已经创建了别名，除了java的基本类型别名为_基本类型（int别名为_int）其他的都为小写的类型名
+    -->
+    <!--
+    最重要的一个设置就是settings=====常用的就是开启驼峰命名法
+
+    还有一个重要的标签就是<typeHandlers></typeHandlers>他是将数据库类型和java中的类型进行对应的一个标签
+    有一个叫做JSR-310这个就是对日期的处理但是从mybatis 3.4以后mybatis已经全部弄好了，不用自己去配置了
+
+    -->
+
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <!--  environments
+            就是可以在里面设置几个不同的环境可以在  default属性中对不同的环境进行切换
+    -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--   databaseIdProvider就是给数据库运营商进行设置别名，然后在select中有一个属性来设置运营商（mysql或者oracle）
+           MySQL就是mysql数据的厂商标识
+  -->
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="MySQL" value="mysql"/>
+    </databaseIdProvider>
+    <!--  mapper是一个很重要的标签里面有三个属性resource、url、class
+    class就是引入接口的全包名，有两种1、将xml和接口放在一个目录下面，并且名称一样
+    2、就是在接口上加上注释，在接口里面写上sql语句
+    也可以不一个一个的进行映射，用<package name=""/>进行对一个包下的所有进行映射
+    -->
+    <mappers>
+        <mapper resource="employeeMapper.xml"/>
+        <mapper class="dao.EmployeeMapperAnnotation"/>
+
+    </mappers>
+
+
+</configuration>

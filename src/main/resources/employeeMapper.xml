@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+namespace这一块当你是面向接口的时候填写的是你创建的接口的全包名
+-->
+<mapper namespace="dao.EmployeeMapper">
+    <!--id这一块当你是面向接口的时候填写的是和接口中对应的方法名相当于是对接口方法的实现
+    databaseId="mysql"就是来设置数据库类型的
+    -->
+    <select id="getEmployeeById" resultType="bean.Employee" databaseId="mysql">
+<!--因为bean中命名和数据库中不一样所以在返回封装数据时候lastName为空，最简单的方式让可以赋值上，就是在sql查询时候对这一个属性进行
+重命名
+原来：select * from tab1_employee where id = #{id}
+改为：select id,last_name lastName,gender,email from tab1_employee where id = #{id}
+开启驼峰命名后就可以直接写为select * from tab1_employee where id = #{id}
+-->
+    select * from tab1_employee where id = #{id}
+  </select>
+</mapper>
